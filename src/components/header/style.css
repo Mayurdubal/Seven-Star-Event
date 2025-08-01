@@ -1,0 +1,40 @@
+header {
+  @apply flex items-center justify-between py-6 px-24;
+  @apply flex items-center justify-between py-6 px-24;
+
+  ul {
+    @apply flex gap-16 px-5 text-base text-black font-medium;
+
+    .active {
+      color: var(--primary-color);
+    }
+  }
+}
+.mobile-header {
+  display: none;
+}
+@media (max-width: 767px) {
+  header {
+    @apply px-8;
+    ul {
+      display: none;
+    }
+  }
+  .mobile-header {
+    display: block;
+  }
+  .mobileMenu {
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 12px;
+    height: 0px;
+    transition: height 1s;
+    ul {
+      padding: 20px;
+      li {
+        padding: 10px;
+      }
+    }
+  }
+  .activeMenu {
+    height: 100%;
+  }
+}

@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap");
+
+:root {
+  --foreground-rgb: #00000099;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+  --primary-color: #038956;
+  --background-color: #0389561a;
+}
+
+body {
+  color: var(--foreground-rgb);
+  font-family: "Inter";
+}
+
+.wrapper {
+  max-width: 1360px;
+  width: 85%;
+  margin: 0 auto;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

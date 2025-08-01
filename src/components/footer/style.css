@@ -1,0 +1,85 @@
+footer {
+  @apply px-16;
+  background: var(--background-color);
+  color: rgba(0, 0, 0, 0.8);
+
+  .footer-1 {
+    @apply pt-10 pb-16 text-sm flex items-start justify-between;
+  }
+  p {
+    line-height: 2;
+  }
+
+  h5 {
+    @apply mb-8 font-semibold;
+    color: var(--primary-color);
+  }
+
+  ul {
+    @apply flex flex-col gap-2;
+
+    li:hover {
+      color: var(--primary-color);
+    }
+  }
+
+  .intro {
+    width: 25%;
+
+    p {
+      @apply mt-4 text-justify;
+    }
+  }
+
+  .explore,
+  .company,
+  .solution {
+    width: 10%;
+  }
+
+  .touch {
+    width: 25%;
+    span {
+      @apply flex gap-4 font-semibold mt-2;
+      color: var(--primary-color);
+    }
+  }
+
+  .footer-2 {
+    @apply py-4 border-t-2 border-[#0000001A];
+    @apply flex items-center justify-between;
+    @apply text-sm;
+
+    ul {
+      @apply flex flex-row items-center gap-4;
+    }
+  }
+}
+@media (max-width: 767px) {
+  .footer-1 {
+    @apply flex flex-wrap;
+    .intro {
+      @apply w-full;
+    }
+    .explore,
+    .company,
+    .solution {
+      @apply w-full mt-6;
+      h5 {
+        @apply mb-4;
+      }
+    }
+    .touch {
+      @apply w-full;
+      h5 {
+        @apply mb-4 mt-6;
+      }
+    }
+  }
+  .footer-2 {
+    @apply flex flex-col text-center;
+    ul {
+      @apply flex justify-between mt-4 w-full;
+    }
+  }
+}
