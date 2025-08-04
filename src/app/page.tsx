@@ -22,8 +22,8 @@ export default function Home() {
         <div className="wrapper">
           <div className="intro">
             <h2>
-              Exceptional Service
-              <span className="new-line">7⭐ Parking</span>
+              Valet Service
+              <span className="new-line">7⭐ Parking Services</span>
             </h2>
             <p>
               Your Vehicle, Our Priority—Delivering Premium Valet Services with

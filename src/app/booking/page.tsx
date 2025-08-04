@@ -11,7 +11,8 @@ import {
   InputLabel,
   Select,
   Grid,
-  Paper
+  Paper,
+  InputAdornment
 } from "@mui/material";
 import EventIcon from "@mui/icons-material/Event";
 import EmailIcon from "@mui/icons-material/Email";
@@ -80,7 +81,8 @@ const BookingPage = () => {
         </Typography>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
+            {/* Full Name */}
+            <Grid item xs={12} sm={6} {...({} as any)}>
               <TextField
                 fullWidth
                 label="Full Name"
@@ -91,12 +93,16 @@ const BookingPage = () => {
                 margin="normal"
                 InputProps={{
                   startAdornment: (
-                    <PersonIcon sx={{ color: "#0A2A51", mr: 1 }} />
+                    <InputAdornment position="start">
+                      <PersonIcon sx={{ color: "#0A2A51", mr: 1 }} />
+                    </InputAdornment>
                   )
                 }}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+
+            {/* Email */}
+            <Grid item xs={12} sm={6} {...({} as any)}>
               <TextField
                 fullWidth
                 label="Email"
@@ -107,11 +113,17 @@ const BookingPage = () => {
                 required
                 margin="normal"
                 InputProps={{
-                  startAdornment: <EmailIcon sx={{ color: "#0A2A51", mr: 1 }} />
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <EmailIcon sx={{ color: "#0A2A51", mr: 1 }} />
+                    </InputAdornment>
+                  )
                 }}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+
+            {/* Phone */}
+            <Grid item xs={12} sm={6} {...({} as any)}>
               <TextField
                 fullWidth
                 label="Phone Number"
@@ -122,11 +134,17 @@ const BookingPage = () => {
                 required
                 margin="normal"
                 InputProps={{
-                  startAdornment: <PhoneIcon sx={{ color: "#0A2A51", mr: 1 }} />
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <PhoneIcon sx={{ color: "#0A2A51", mr: 1 }} />
+                    </InputAdornment>
+                  )
                 }}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+
+            {/* Service Select */}
+            <Grid item xs={12} sm={6} {...({} as any)}>
               <FormControl fullWidth margin="normal">
                 <InputLabel>Select Service</InputLabel>
                 <Select
@@ -154,7 +172,9 @@ const BookingPage = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12}>
+
+            {/* Booking Date */}
+            <Grid item xs={12} {...({} as any)}>
               <TextField
                 fullWidth
                 label="Booking Date"
@@ -166,11 +186,17 @@ const BookingPage = () => {
                 required
                 margin="normal"
                 InputProps={{
-                  startAdornment: <EventIcon sx={{ color: "#0A2A51", mr: 1 }} />
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <EventIcon sx={{ color: "#0A2A51", mr: 1 }} />
+                    </InputAdornment>
+                  )
                 }}
               />
             </Grid>
-            <Grid item xs={12}>
+
+            {/* Submit Button */}
+            <Grid item xs={12} {...({} as any)}>
               <Button
                 type="submit"
                 variant="contained"
@@ -183,7 +209,10 @@ const BookingPage = () => {
                   fontWeight: "bold",
                   borderRadius: "6px",
                   boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
-                  "&:hover": { backgroundColor: "#003347", boxShadow: "none" }
+                  "&:hover": {
+                    backgroundColor: "#003347",
+                    boxShadow: "none"
+                  }
                 }}
               >
                 Confirm Booking
