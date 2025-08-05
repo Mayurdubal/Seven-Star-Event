@@ -1,9 +1,9 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "@formspree/react";
+import { SupportAgent, Email, Phone } from "@mui/icons-material"; // ✅ MUI icons
 
 import "./style.css";
 import { techStack } from "@/constants";
@@ -42,7 +42,7 @@ export default function Home() {
             </ul>
           </div>
           <figure>
-            <Image
+            <img
               src="/video/key.png"
               width={600}
               height={800}
@@ -128,23 +128,24 @@ export default function Home() {
           <h3>Explore our FAQ's</h3>
           <h5>✔️ Luxury Meets Convenience</h5>
           <p>
-            Elevate your guest experience with **professional, fast, and
-            secure** valet parking services, ensuring a smooth and welcoming
-            arrival.
+            Elevate your guest experience with{" "}
+            <b>professional, fast, and secure</b> valet parking services,
+            ensuring a smooth and welcoming arrival.
           </p>
 
           <h5>✔️ Safety & Security First</h5>
           <p>
-            Our trained valets follow strict **security protocols**, providing
-            GPS vehicle tracking, insured coverage, and **contactless payment**
+            Our trained valets follow strict <b>security protocols</b>,
+            providing GPS vehicle tracking, insured coverage, and{" "}
+            <b>contactless payment</b>
             options for peace of mind.
           </p>
 
           <h5>✔️ Tailored Parking Solutions</h5>
           <p>
             From corporate events to weddings, hotels, restaurants, and airport
-            valet services, we cater to every parking need with **customized
-            solutions**.
+            valet services, we cater to every parking need with{" "}
+            <b>customized solutions</b>.
           </p>
 
           <FAQAccordion />
@@ -166,21 +167,13 @@ export default function Home() {
           <div className="options">
             <div>
               <button>
-                <Image
-                  src="/support.svg"
-                  width={25}
-                  height={25}
-                  alt="support"
-                />{" "}
-                Need Support?
+                <SupportAgent style={{ marginRight: "8px" }} /> Need Support?
               </button>
               <button>
-                <Image src="/email.svg" width={25} height={25} alt="email" />{" "}
-                Have Feedback?
+                <Email style={{ marginRight: "8px" }} /> Have Feedback?
               </button>
               <button>
-                <Image src="/phone.svg" width={25} height={25} alt="phone" />{" "}
-                Call Us
+                <Phone style={{ marginRight: "8px" }} /> Call Us
               </button>
             </div>
             <div>

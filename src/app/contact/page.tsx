@@ -9,14 +9,18 @@ import {
   TextField,
   Box,
   Paper,
-  Grid,
-  IconButton
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton,
+  CircularProgress
 } from "@mui/material";
-import SupportAgentIcon from "@mui/icons-material/SupportAgent";
-import MailOutlineIcon from "@mui/icons-material/MailOutline";
-import SendIcon from "@mui/icons-material/Send";
 import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import SendIcon from "@mui/icons-material/Send";
+import CloseIcon from "@mui/icons-material/Close";
+import axios from "axios";
 
 interface FormData {
   name: string;
@@ -33,6 +37,13 @@ const Contact = () => {
     subject: "",
     message: ""
   });
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatInput, setChatInput] = useState("");
+  const [chatMessages, setChatMessages] = useState<
+    { sender: "user" | "ai"; text: string }[]
+  >([]);
+  const [loading, setLoading] = useState(false);
+
   const hasErrors = Array.isArray(state.errors) && state.errors.length > 0;
 
   const handleChange = (
@@ -48,103 +59,154 @@ const Contact = () => {
     }
   };
 
+  const handleSendMessage = async () => {
+    if (!chatInput.trim()) return;
+
+    setChatMessages([...chatMessages, { sender: "user", text: chatInput }]);
+    const userMessage = chatInput;
+    setChatInput("");
+    setLoading(true);
+
+    try {
+      const res = await axios.post(
+        "https://api.openai.com/v1/chat/completions",
+        {
+          model: "gpt-4o-mini",
+          messages: [
+            {
+              role: "system",
+              content:
+                "You are a helpful AI support agent for Seven Star Services. Answer questions about valet services, pricing, and availability."
+            },
+            { role: "user", content: userMessage }
+          ]
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`,
+            "Content-Type": "application/json"
+          }
+        }
+      );
+
+      const aiReply = res.data.choices[0].message.content;
+      setChatMessages((prev) => [...prev, { sender: "ai", text: aiReply }]);
+    } catch (error) {
+      setChatMessages((prev) => [
+        ...prev,
+        { sender: "ai", text: "Sorry, I couldn’t fetch a response right now." }
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <Box sx={{ py: 10, color: "#fff" }}>
-      <Container maxWidth="lg">
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        bgcolor: "linear-gradient(135deg, #0A2A51, #003347)",
+        py: 6
+      }}
+    >
+      <Container maxWidth="sm">
         <Paper
-          elevation={5}
+          elevation={6}
           sx={{
             p: 5,
             borderRadius: 4,
             textAlign: "center",
-            backgroundColor: "#1e293b",
-            color: "#fff"
+            background: "linear-gradient(135deg, #ffffff, #f9fafc)",
+            boxShadow: "0 8px 30px rgba(0,0,0,0.15)"
           }}
         >
           <Typography
             variant="h4"
             fontWeight={700}
-            color="#38bdf8"
+            color="primary"
             gutterBottom
           >
             Contact Us
           </Typography>
-          <Typography variant="h6" gutterBottom>
-            Need <span style={{ color: "#38bdf8" }}>help?</span> Let&apos;s
-            Talk!
-          </Typography>
-          <Typography variant="body1" paragraph>
-            Our team is ready to assist you. Reach out to us through any of the
-            options below.
+          <Typography variant="body1" sx={{ mb: 4, color: "text.secondary" }}>
+            We’d love to hear from you. Reach out today!
           </Typography>
 
-          <Grid container spacing={2} justifyContent="center" sx={{ my: 3 }}>
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<ContactPhoneIcon />}
-              >
-                Call Us
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                color="secondary"
-                startIcon={<ChatBubbleOutlineIcon />}
-              >
-                Live Chat
-              </Button>
-            </Grid>
-          </Grid>
+          {/* Action Buttons */}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
+              gap: 2,
+              mb: 4
+            }}
+          >
+            <Button
+              variant="contained"
+              startIcon={<ContactPhoneIcon />}
+              sx={{
+                flex: 1,
+                py: 1.2,
+                fontSize: "1rem",
+                fontWeight: 600,
+                background: "linear-gradient(135deg, #0A2A51, #1E88E5)",
+                "&:hover": {
+                  background: "linear-gradient(135deg, #003347, #1565C0)"
+                }
+              }}
+            >
+              Call Us
+            </Button>
+            <Button
+              variant="outlined"
+              startIcon={<ChatBubbleOutlineIcon />}
+              sx={{
+                flex: 1,
+                py: 1.2,
+                fontSize: "1rem",
+                fontWeight: 600,
+                borderColor: "#0A2A51",
+                color: "#0A2A51",
+                "&:hover": {
+                  bgcolor: "#e3f2fd",
+                  borderColor: "#003347"
+                }
+              }}
+              onClick={() => setChatOpen(true)}
+            >
+              Live Chat
+            </Button>
+          </Box>
 
-          <Box sx={{ textAlign: "left", mt: 4 }}>
-            <Typography variant="h5" gutterBottom color="#38bdf8">
-              How can we assist you?
-            </Typography>
-            <Typography variant="body1" paragraph>
-              Fill in the form below, and we will get back to you as soon as
-              possible.
-            </Typography>
-
-            <form onSubmit={handleFormSubmit}>
-              <Grid container spacing={2} sx={{ mb: 2 }}>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    label="Your Name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    sx={{ bgcolor: "#fff", borderRadius: 1 }}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    label="Email Address"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    sx={{ bgcolor: "#fff", borderRadius: 1 }}
-                  />
-                </Grid>
-              </Grid>
+          {/* Contact Form */}
+          <form onSubmit={handleFormSubmit}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
               <TextField
-                fullWidth
+                label="Your Name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+              <TextField
+                label="Email Address"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+              <TextField
                 label="Subject"
                 name="subject"
                 value={formData.subject}
                 onChange={handleChange}
                 required
-                sx={{ mb: 2, bgcolor: "#fff", borderRadius: 1 }}
               />
               <TextField
-                fullWidth
                 label="Your Message"
                 name="message"
                 multiline
@@ -152,38 +214,101 @@ const Contact = () => {
                 value={formData.message}
                 onChange={handleChange}
                 required
-                sx={{ mb: 2, bgcolor: "#fff", borderRadius: 1 }}
               />
               <Button
-                variant="contained"
-                color="success"
                 type="submit"
+                variant="contained"
                 disabled={state.submitting}
                 endIcon={<SendIcon />}
-                fullWidth
                 sx={{
-                  fontSize: "1.1rem",
                   py: 1.5,
-                  bgcolor: "#38bdf8",
-                  "&:hover": { bgcolor: "#0284c7" }
+                  fontSize: "1.1rem",
+                  fontWeight: 600,
+                  background: "linear-gradient(135deg, #38bdf8, #0284c7)",
+                  "&:hover": {
+                    background: "linear-gradient(135deg, #0284c7, #0369a1)"
+                  }
                 }}
               >
                 Send Message
               </Button>
-            </form>
-            <Typography
-              sx={{
-                opacity: 1,
-                marginTop: 2,
-                color: hasErrors ? "#f87171" : "#4ade80"
-              }}
-            >
-              {state.succeeded && "Your Message sent successfully!"}
-              {hasErrors && "Failed to send Message"}
-            </Typography>
-          </Box>
+            </Box>
+          </form>
+
+          <Typography
+            textAlign="center"
+            sx={{
+              mt: 2,
+              color: hasErrors ? "error.main" : "success.main",
+              fontWeight: 500
+            }}
+          >
+            {state.succeeded && "Your Message sent successfully!"}
+            {hasErrors && "Failed to send Message"}
+          </Typography>
         </Paper>
       </Container>
+
+      {/* Live Chat Modal */}
+      <Dialog
+        open={chatOpen}
+        onClose={() => setChatOpen(false)}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle>
+          Seven Star Services - Live Chat
+          <IconButton
+            aria-label="close"
+            onClick={() => setChatOpen(false)}
+            sx={{ position: "absolute", right: 8, top: 8 }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers sx={{ minHeight: "300px" }}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            {chatMessages.map((msg, idx) => (
+              <Box
+                key={idx}
+                sx={{
+                  alignSelf: msg.sender === "user" ? "flex-end" : "flex-start",
+                  bgcolor: msg.sender === "user" ? "primary.main" : "grey.200",
+                  color: msg.sender === "user" ? "#fff" : "#000",
+                  p: 1.5,
+                  borderRadius: 2,
+                  maxWidth: "80%"
+                }}
+              >
+                {msg.text}
+              </Box>
+            ))}
+            {loading && (
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <CircularProgress size={24} />
+              </Box>
+            )}
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Box sx={{ display: "flex", gap: 1, width: "100%" }}>
+            <TextField
+              fullWidth
+              placeholder="Type your message..."
+              value={chatInput}
+              onChange={(e) => setChatInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+            />
+            <Button
+              variant="contained"
+              onClick={handleSendMessage}
+              disabled={loading}
+            >
+              Send
+            </Button>
+          </Box>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
